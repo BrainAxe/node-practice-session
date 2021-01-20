@@ -38,4 +38,37 @@ module.exports = class Cart {
 		})
 		// Add new product/ increase quantity
 	}
+
+	static deleteProduct(id, productPrice) {
+		fs.readFile(p, (err, fileContent) => {
+			if (err) {
+				return;
+			}
+			const updatedCart = {...JSON.parse(fileContent)};
+			console.log(updatedCart);
+			const product = updatedCart.products.find(prod => prod.id === id);
+			console.log(typeof updatedCart.products[0].id);
+			if (!product) {
+				return;
+			}
+			console.log(product);
+			const productQty = product.qty;
+			updatedCart.products = updatedCart.products.filter(prod => prod.id !== id);
+			updatedCart.totalPrice = updatedCart.totalPrice - productPrice * productQty;
+			fs.writeFile(p, JSON.stringify(updatedCart), err => {
+				console.log(err);
+			})
+		})
+	}
+
+	static getCart(cb){
+		fs.readFile(p, (err, fileContent) => {
+			const cart = JSON.parse(fileContent);
+			if (err) {
+				cb(null);
+			} else {
+				cb(cart);
+			}
+		})
+	}
 }
