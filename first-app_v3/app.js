@@ -51,6 +51,7 @@ Order.belongsToMany(Product, { through: OrderItem });
 
 
 // sequelize.sync({ force: true })
+// sequelize.sync({ alter: true })
 sequelize.sync()
 .then(result => {
 	// console.log(result);
