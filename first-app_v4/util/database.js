@@ -1,10 +1,11 @@
+require('dotenv').config();
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 
 let _db; // UnderScore is just a signal that this will only use in this file
 
 const mongoConnect = (callback) => {
-	MongoClient.connect('mongodb+srv://tanzim:9ggZnKuD6BY@cluster0.99q9l.mongodb.net/shop?retryWrites=true&w=majority')
+	MongoClient.connect(process.env.DB_CONN)
 	.then(client => {
 		console.log("Connected!");
 		_db = client.db();
