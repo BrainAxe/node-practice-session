@@ -88,8 +88,10 @@ exports.postOrder = (req, res, next) => {
       return order.save();
     })
     .then((result) => {
-      res.redirect("/order");
-    })
+		return req.user.clearCart();
+    }).then(() => {
+		res.redirect("/order");
+	})
     .catch((err) => console.log(err));
 };
 
