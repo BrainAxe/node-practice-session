@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+
 const User = require('../models/user');
 
 
@@ -39,28 +41,31 @@ exports.postLogout = (req, res, next) => {
 };
 
 exports.postSignup = (req, res, next) => {
-	const email = req.body.email;
-	const password = req.body.password;
-	const confirmPassword = req.body.confirmPassword;
-	const name = email.split('@')[0];
+  const email = req.body.email;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+  const name = email.split("@")[0];
 
-	User.findOne({email: email})
-	.then(userDoc => {
-		if (userDoc) {
-			return res.redirect('/signup');
-		}
-		const user = new User({
-			name: name,
-			email: email,
-			password: password,
-			cart: { item: [] }
-		});
-		return user.save();
-	})
-	.then(result => {
-		res.redirect('/login');
-	})
-	.catch(err => {
-		console.log(err);
-	});
+  User.findOne({ email: email })
+    .then((userDoc) => {
+      if (userDoc) {
+        return res.redirect("/signup");
+      }
+      return bcrypt.hash(password, 12);
+    })
+    .then((hasedPassword) => {
+      const user = new User({
+        name: name,
+        email: email,
+        password: hasedPassword,
+        cart: { item: [] },
+      });
+      return user.save();
+    })
+    .then((result) => {
+      res.redirect("/login");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
