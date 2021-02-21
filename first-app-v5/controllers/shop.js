@@ -6,6 +6,8 @@ const PDFDocument = require('pdfkit');
 const Product = require('../models/product');
 const Order = require('../models/order');
 
+const ITEMS_PER_PAGE = 2;
+
 exports.getProducts = (req, res, next) => {
 	Product.find({ userId: req.user._id }).then(products => {
 		res.render('shop/product-list', {
@@ -38,18 +40,23 @@ exports.getProduct = (req, res, next) => {
   };
 
 exports.getIndex = (req, res, next) => {
-  Product.find().then(products => {
-	res.render('shop/index', {
-		prods: products,
-		pageTitle: 'Shop',
-		path: '/'
-	});
-  })
-  .catch((err) => {
-	const error = new Error(err);
-	error.httpStatusCode = 500;
-	return next(error);
-  }); 
+  const page = req.query.page;
+
+  Product.find()
+    .skip((page - 1) * ITEMS_PER_PAGE)
+    .limit(ITEMS_PER_PAGE)
+    .then((products) => {
+      res.render("shop/index", {
+        prods: products,
+        pageTitle: "Shop",
+        path: "/",
+      });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.getCart = (req, res, next) => {
