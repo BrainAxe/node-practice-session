@@ -1,7 +1,7 @@
 {
   "name": "first-app_v5",
   "version": "1.0.0",
-  "description": "first-app_v4",
+  "description": "first-app_v5",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
