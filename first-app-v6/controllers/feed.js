@@ -16,6 +16,7 @@ exports.getPosts = (req, res, next) => {
     .then((count) => {
       totalItems = count;
       return Post.find()
+        .populate('creator')
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })
@@ -66,7 +67,7 @@ exports.createPost = (req, res, next) => {
     .then((user) => {
       creator = user;
       user.posts.push(post);
-      io.getIO().emit('posts', { action: 'create', post: post });
+      io.getIO().emit('posts', { action: 'create', post: {...post._doc, creator: creator} });
       return user.save();
     })
     .then((result) => {
